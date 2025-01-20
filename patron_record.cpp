@@ -1,35 +1,42 @@
 #include "patron_record.h"
+#include <iostream>
 
 // Add a book to the record
-void patronRecord::addBook(const BookItem& book) {
+void PatronRecord::addBook(const BookItem& book) {
     checkedOutBooks.push_back(book);
 }
 
 // Remove a book from the record
-void patronRecord::removeBook(const std::string& ISBN) {
+void PatronRecord::removeBook(const std::string& isbn) {
     checkedOutBooks.erase(std::remove_if(checkedOutBooks.begin(), checkedOutBooks.end(),
-        [&ISBN](const BookItem& book) { return book.getISBN() == ISBN; }),
-        checkedOutBooks.end());
+                                         [&](const BookItem& book) { return book.getISBN() == isbn; }),
+                          checkedOutBooks.end());
 }
 
-// List checked-out books
-void patronRecord::listCheckedOutBooks() const {
+// List all checked-out books
+void PatronRecord::listCheckedOutBooks() const {
     for (const auto& book : checkedOutBooks) {
         book.printDetails();
+        std::cout << "--------------------------" << std::endl;
     }
 }
 
-// Check if there are overdue books
-bool patronRecord::hasOverdueBooks() const {
-    // Example logic
-    return false;
+// Get the count of borrowed books
+int PatronRecord::getBorrowedBookCount() const {
+    return checkedOutBooks.size();
 }
 
-// Calculate total late fees
-double patronRecord::calculateTotalLateFees() const {
+// Check for overdue books (for simplicity, assume all books are overdue)
+bool PatronRecord::hasOverdueBooks() const {
+    // Placeholder for actual overdue logic
+    return !checkedOutBooks.empty();
+}
+
+// definition of function to calculate total late fees for all books
+double PatronRecord::calculateTotalLateFees() const {
     double totalFees = 0.0;
     for (const auto& book : checkedOutBooks) {
-        // Example calculation
+        totalFees += book.calculateLateFees(10); // Assume 10 days overdue for all
     }
     return totalFees;
 }
